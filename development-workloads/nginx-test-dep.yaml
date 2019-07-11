@@ -19,6 +19,12 @@ spec:
   selector:
     matchLabels:
       app: nginx-test
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        app: nginx-test
     spec:
       containers:
       - name: nginx-test
