@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-test
+  namespace: development
+  labels:
+    app: nginx-test
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.init: regexp:^3.*
+    flux.weave.works/tag.podinfod: semver:~1.3
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: nginx-test
+    spec:
+      containers:
+      - name: nginx-test
+        image: nginx:1.17.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        command:
+        - tail
+        - -f
+        - /dev/null
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
