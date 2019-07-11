@@ -34,10 +34,6 @@ spec:
         - containerPort: 80
           name: http
           protocol: TCP
-        command:
-        - tail
-        - -f
-        - /dev/null
         livenessProbe:
           httpGet:
             path: /
